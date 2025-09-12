@@ -7,16 +7,16 @@ html, body {
     overflow: hidden; /* Evita que aparezcan barras de scroll */
 }
 
-/* Usamos Flexbox para centrar el contenedor del juego perfectamente */
+/* CAMBIO: Se actualiza la fuente a "Poppins" y el color de fondo a un gris oscuro más moderno */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #1a1a1a;
-    font-family: 'Press Start 2P', cursive;
+    background-color: #1a202c; /* Gris oscuro azulado */
+    font-family: 'Poppins', sans-serif;
 }
 
-/* El contenedor del juego ya no necesita estilos, Phaser lo gestionará */
+/* CAMBIO: Se elimina el borde y se suaviza la sombra para un look más limpio */
 #game-container {
-    /* El borde y la sombra se eliminan para un look más limpio en pantalla completa */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
