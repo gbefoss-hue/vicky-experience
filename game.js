@@ -1,10 +1,8 @@
 // --- CONSTANTES Y TEXTOS CLAVE ---
-// Ya no necesitamos un número de WhatsApp específico.
+const WHATSAPP_NUMBER = '54911xxxxxxxx';
 const EMOJI_LIST = ['🍟', '🍷', '🍸', '✈️', '⛱️', '🪩', '👠', '🍣', '💜', '🐣', '🐶', '🌙', '☃️', '🥑', '🌎', '🌭'];
 
-// --- TEXTO DE INICIO MODIFICADO ---
 const START_MESSAGE = '¿Pensabas que zafabas??? Te inventaste un casorio para irte antes?\n\nLas Siniestras te informan que tu experiencia está por llegar...\nVolvé a la infancia con este juego y liberá algunos fragmentos de información.';
-
 const WIN_MESSAGE = '--- ANALISIS DE PISTAS COMPLETADO --- \n\n Pistas recolectadas: 🍣, ✈️, 💜, 👠, 🌭, 🌎... \n\n Conclusion del sistema: ¡ERROR 404! NINGUNA DE ESTAS PISTAS ES CORRECTA. 😉 \n\n Tu verdadera experiencia es demasiado increible para ser descifrada. Para desbloquearla, necesitamos tu confirmacion para la noche del: \n\n SABADO 20 DE SEPTIEMBRE \n\n ¿Aceptas la verdadera mision, sin mas pistas?';
 const ALT_DATE_MESSAGE = 'Recalculando... ¡Alerta! El sistema ha encontrado una unica ventana de oportunidad alternativa: \n\n VIERNES 19 DE SEPTIEMBRE \n\n ¿Procedemos?';
 
@@ -30,9 +28,9 @@ class StartScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#000000');
-        this.add.text(500, 300, START_MESSAGE, { ...FONT_STYLE_RETRO, fontSize: '14px', wordWrap: { width: 800 }, lineSpacing: 10 }).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, START_MESSAGE, { ...FONT_STYLE_RETRO, fontSize: '14px', wordWrap: { width: 800 }, lineSpacing: 10 }).setOrigin(0.5);
         
-        const playButton = this.add.text(500, 480, 'JUGAR', { ...FONT_STYLE_RETRO, fontSize: '24px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 20, y: 10 } }).setOrigin(0.5).setInteractive();
+        const playButton = this.add.text(this.scale.width / 2, this.scale.height / 2 + 100, 'JUGAR', { ...FONT_STYLE_RETRO, fontSize: '24px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 20, y: 10 } }).setOrigin(0.5).setInteractive();
 
         playButton.on('pointerdown', () => this.scene.start('GameScene'));
         playButton.on('pointerover', () => playButton.setStyle({ fill: '#ffffff' }));
@@ -56,21 +54,22 @@ class GameScene extends Phaser.Scene {
         this.emojisToRemove = [];
 
         const gameWidth = 800;
+        const gameHeight = 600;
         const sidebarWidth = 200;
         
-        this.physics.world.setBounds(0, 0, gameWidth, 600);
+        this.physics.world.setBounds(0, 0, gameWidth, gameHeight);
         this.physics.world.setBoundsCollision(true, true, true, false);
         
-        this.add.rectangle(gameWidth + (sidebarWidth / 2), 300, sidebarWidth, 600, 0x1a1a1a).setStrokeStyle(2, 0xffffff);
+        this.add.rectangle(gameWidth + (sidebarWidth / 2), gameHeight / 2, sidebarWidth, gameHeight, 0x1a1a1a).setStrokeStyle(2, 0xffffff);
         this.add.text(gameWidth + 100, 40, 'PISTAS', { ...FONT_STYLE_RETRO, fontSize: '16px' }).setOrigin(0.5);
         this.cluesText = this.add.text(gameWidth + 100, 300, '', { ...FONT_STYLE_RETRO, fontSize: '24px', wordWrap: { width: sidebarWidth - 20 }, align: 'center' }).setOrigin(0.5);
 
-        this.paddle = this.add.rectangle(400, 540, 150, 20, 0xffffff);
+        this.paddle = this.add.rectangle(gameWidth / 2, gameHeight - 60, 150, 20, 0xffffff);
         this.physics.add.existing(this.paddle);
         this.paddle.body.setImmovable(true);
         this.paddle.body.allowGravity = false;
 
-        this.ball = this.add.circle(400, 300, 15, 0xffffff);
+        this.ball = this.add.circle(gameWidth / 2, gameHeight / 2, 15, 0xffffff);
         this.physics.add.existing(this.ball);
         this.ball.body.setCircle(15);
         this.ball.body.setCollideWorldBounds(true);
@@ -78,10 +77,9 @@ class GameScene extends Phaser.Scene {
         this.ball.body.setVelocity(200, -300);
 
         this.bricks = this.physics.add.staticGroup();
-        const brickColors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff];
         for (let i = 0; i < 5; i++) {
             for (let j = 0; j < 10; j++) {
-                const brick = this.add.rectangle(80 + j * 70, 70 + i * 37, 64, 32, brickColors[i % brickColors.length]);
+                const brick = this.add.rectangle(80 + j * 70, 70 + i * 37, 64, 32, Phaser.Display.Color.RandomRGB().color);
                 this.bricks.add(brick);
             }
         }
@@ -150,14 +148,12 @@ class WinScene extends Phaser.Scene {
     constructor() { super('WinScene'); }
     create() {
         this.cameras.main.setBackgroundColor('#000000');
-        this.add.text(500, 250, WIN_MESSAGE, { ...FONT_STYLE_RETRO, fontSize: '12px', wordWrap: { width: 850 } }).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, WIN_MESSAGE, { ...FONT_STYLE_RETRO, fontSize: '12px', wordWrap: { width: 850 } }).setOrigin(0.5);
         
-        // --- WHATSAPP MODIFICADO ---
-        // Se elimina el número de la URL para que el usuario elija el contacto.
-        const btnAccept = this.add.text(300, 500, 'ACEPTO', { ...FONT_STYLE_RETRO, fontSize: '16px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 15, y: 10 } }).setOrigin(0.5).setInteractive();
+        const btnAccept = this.add.text(this.scale.width / 2 - 200, this.scale.height - 100, 'ACEPTO', { ...FONT_STYLE_RETRO, fontSize: '16px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 15, y: 10 } }).setOrigin(0.5).setInteractive();
         btnAccept.on('pointerdown', () => window.open(`https://wa.me/?text=${encodeURIComponent(WHATSAPP_MSG_SATURDAY)}`, '_blank'));
         
-        const btnDecline = this.add.text(700, 500, 'IMPOSIBLE ESE DIA', { ...FONT_STYLE_RETRO, fontSize: '16px', fill: '#ff0000', backgroundColor: '#333', padding: { x: 15, y: 10 } }).setOrigin(0.5).setInteractive();
+        const btnDecline = this.add.text(this.scale.width / 2 + 200, this.scale.height - 100, 'IMPOSIBLE ESE DIA', { ...FONT_STYLE_RETRO, fontSize: '16px', fill: '#ff0000', backgroundColor: '#333', padding: { x: 15, y: 10 } }).setOrigin(0.5).setInteractive();
         btnDecline.on('pointerdown', () => this.scene.start('AltDateScene'));
     }
 }
@@ -169,10 +165,9 @@ class AltDateScene extends Phaser.Scene {
     constructor() { super('AltDateScene'); }
     create() {
         this.cameras.main.setBackgroundColor('#000000');
-        this.add.text(500, 250, ALT_DATE_MESSAGE, { ...FONT_STYLE_RETRO, fontSize: '14px', wordWrap: { width: 800 } }).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, ALT_DATE_MESSAGE, { ...FONT_STYLE_RETRO, fontSize: '14px', wordWrap: { width: 800 } }).setOrigin(0.5);
         
-        // --- WHATSAPP MODIFICADO ---
-        const btnPlanB = this.add.text(500, 450, 'ACEPTO PLAN B', { ...FONT_STYLE_RETRO, fontSize: '20px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 15, y: 10 } }).setOrigin(0.5).setInteractive();
+        const btnPlanB = this.add.text(this.scale.width / 2, this.scale.height - 150, 'ACEPTO PLAN B', { ...FONT_STYLE_RETRO, fontSize: '20px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 15, y: 10 } }).setOrigin(0.5).setInteractive();
         btnPlanB.on('pointerdown', () => window.open(`https://wa.me/?text=${encodeURIComponent(WHATSAPP_MSG_FRIDAY)}`, '_blank'));
     }
 }
@@ -187,9 +182,9 @@ class GameOverScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#000000');
-        this.add.text(500, 200, 'GAME OVER', { ...FONT_STYLE_RETRO, fontSize: '48px', fill: '#ff0000' }).setOrigin(0.5);
-        this.add.text(500, 300, 'Sin completar no hay experiencia', { ...FONT_STYLE_RETRO, fontSize: '14px', fill: '#ffffff' }).setOrigin(0.5);
-        const restartButton = this.add.text(500, 420, 'Jugar de nuevo', { ...FONT_STYLE_RETRO, fontSize: '24px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 20, y: 10 } }).setOrigin(0.5).setInteractive();
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 100, 'GAME OVER', { ...FONT_STYLE_RETRO, fontSize: '48px', fill: '#ff0000' }).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, this.scale.height / 2, 'Sin completar no hay experiencia', { ...FONT_STYLE_RETRO, fontSize: '14px', fill: '#ffffff' }).setOrigin(0.5);
+        const restartButton = this.add.text(this.scale.width / 2, this.scale.height / 2 + 120, 'Jugar de nuevo', { ...FONT_STYLE_RETRO, fontSize: '24px', fill: '#00ff00', backgroundColor: '#333', padding: { x: 20, y: 10 } }).setOrigin(0.5).setInteractive();
 
         restartButton.on('pointerdown', () => this.scene.start('GameScene'));
         restartButton.on('pointerover', () => restartButton.setStyle({ fill: '#ffffff' }));
@@ -198,12 +193,17 @@ class GameOverScene extends Phaser.Scene {
 }
 
 
-// --- Configuración Final del Juego ---
+// --- CONFIGURACIÓN FINAL Y RESPONSIVA DEL JUEGO ---
 const config = {
     type: Phaser.AUTO,
-    width: 1000,
-    height: 600,
-    parent: 'game-container',
+    // La configuración de tamaño y escala ahora va dentro del objeto 'scale'.
+    scale: {
+        mode: Phaser.Scale.FIT, // FIT escala el juego para que quepa en la pantalla, manteniendo la proporción.
+        autoCenter: Phaser.Scale.CENTER_BOTH, // Centra el juego horizontal y verticalmente.
+        parent: 'game-container', // El ID del div en el HTML.
+        width: 1000, // El tamaño base del juego (ancho).
+        height: 600 // El tamaño base del juego (alto).
+    },
     physics: {
         default: 'arcade',
         arcade: { 
