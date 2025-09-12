@@ -2,13 +2,15 @@
 const EMOJI_LIST = ['🍟', '🍷', '🍸', '✈️', '⛱️', '🪩', '👠', '🍣', '💜', '🐣', '🐶', '🌙', '☃️', '🥑', '🌎', '🌭'];
 
 const START_MESSAGE = '¿Pensabas que zafabas??? Te inventaste un casorio para irte antes?\n\nLas Siniestras te informan que tu experiencia está por llegar...\nVolvé a la infancia con este juego y liberá algunos fragmentos de información.';
-const WIN_MESSAGE = '--- ANÁLISIS DE PISTAS COMPLETADO --- \n\n Pistas recolectadas: 🍣, ✈️, 💜, 👠, 🌭, 🌎... \n\n Conclusión del sistema: ¡ERROR 404! NINGUNA DE ESTAS PISTAS ES CORRECTA. 😉 \n\n Tu verdadera experiencia es demasiado increíble para ser descifrada. Para desbloquearla, necesitamos tu confirmación para la noche del: \n\n SÁBADO 20 DE SEPTIEMBRE \n\n ¿Aceptas la verdadera misión, sin más pistas?';
-const ALT_DATE_MESSAGE = 'Recalculando... ¡Alerta! El sistema ha encontrado una única ventana de oportunidad alternativa: \n\n VIERNES 19 DE SEPTIEMBRE \n\n ¿Procedemos?';
 
-const WHATSAPP_MSG_SATURDAY = 'Ok, ok, ¡me atraparon! Reservo el sábado 20 de septiembre para lo que sea que estén tramando, siniestras. ¡Avisen!';
-const WHATSAPP_MSG_FRIDAY = 'El sábado 20 no puedo, pero me libero para el Plan B del viernes 19. Anotado. ¡No se van a librar de mí tan fácil! 😉';
+// --- TEXTOS MODIFICADOS ---
+const WIN_MESSAGE = '--- ANÁLISIS DE PISTAS COMPLETADO --- \n\n Pistas recolectadas: 🍣, ✈️, 💜, 👠, 🌭, 🌎... \n\n Conclusión del sistema: ¡ERROR 404! NINGUNA DE ESTAS PISTAS ES CORRECTA. 😉 \n\n Lo único que necesitamos es tu confirmación para la noche del: \n\n SÁBADO 20 DE SEPTIEMBRE';
+const ALT_DATE_MESSAGE = 'Recalculando... ¡Alerta! El sistema ha encontrado una unica ventana de oportunidad alternativa: \n\n VIERNES 19 DE SEPTIEMBRE \n\n ¿Procedemos?';
 
-// --- NUEVO ESTILO MODERNO ---
+const WHATSAPP_MSG_SATURDAY = 'Yeeeiiiii. Reservo el sábado 20 de septiembre para lo que sea que estén tramando, siniestras. ¡Avisen!';
+const WHATSAPP_MSG_FRIDAY = 'El sábado 20 no puedo! pero me libero para el Plan B del viernes 19. Agendado!';
+
+// --- ESTILO MODERNO ---
 const FONT_STYLE_MODERN = {
     fontFamily: '"Poppins", sans-serif',
     fill: '#E2E8F0', // Un blanco más suave
@@ -76,7 +78,6 @@ class GameScene extends Phaser.Scene {
         this.ball.body.setBounce(1);
         this.ball.body.setVelocity(250, -350);
 
-        // --- NUEVA PALETA DE COLORES PARA LADRILLOS ---
         const brickColors = [0x3A86FF, 0x8338EC, 0xFF006E, 0xFB5607, 0xFFBE0B];
         this.bricks = this.physics.add.staticGroup();
         for (let i = 0; i < 5; i++) {
