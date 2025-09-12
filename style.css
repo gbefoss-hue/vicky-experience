@@ -1,0 +1,18 @@
+/* Estilos generales para el cuerpo de la página */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    /* Aplicamos la fuente retro a toda la página */
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Estilos para el contenedor del juego */
+#game-container {
+    border: 3px solid #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
