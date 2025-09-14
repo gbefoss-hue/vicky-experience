@@ -7,16 +7,16 @@ html, body {
     overflow: hidden; /* Evita que aparezcan barras de scroll */
 }
 
-/* CAMBIO: Se actualiza la fuente a "Poppins" y el color de fondo a un gris oscuro más moderno */
+/* CAMBIO: Se actualiza la fuente a "Anton" */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #1a202c; /* Gris oscuro azulado */
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Anton', sans-serif;
 }
 
-/* CAMBIO: Se elimina el borde y se suaviza la sombra para un look más limpio */
+/* Se elimina el borde y se suaviza la sombra para un look más limpio */
 #game-container {
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }

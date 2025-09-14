@@ -1,19 +1,17 @@
 // --- CONSTANTES Y TEXTOS CLAVE ---
 const EMOJI_LIST = ['🍟', '🍷', '🍸', '✈️', '⛱️', '🪩', '👠', '🍣', '💜', '🐣', '🐶', '🌙', '☃️', '🥑', '🌎', '🌭'];
 
-const START_MESSAGE = '¿Pensabas que zafabas??? Te inventaste un casorio para irte antes?\n\nLas Siniestras te informan que tu experiencia está por llegar...\nVolvé a la infancia con este juego y liberá algunos fragmentos de información.';
-
-// --- TEXTOS MODIFICADOS ---
-const WIN_MESSAGE = '--- ANÁLISIS DE PISTAS COMPLETADO --- \n\n Pistas recolectadas: 🍣, ✈️, 💜, 👠, 🌭, 🌎... \n\n Conclusión del sistema: ¡ERROR 404! NINGUNA DE ESTAS PISTAS ES CORRECTA. 😉 \n\n Lo único que necesitamos es tu confirmación para la noche del: \n\n SÁBADO 20 DE SEPTIEMBRE';
-const ALT_DATE_MESSAGE = 'Recalculando... ¡Alerta! El sistema ha encontrado una unica ventana de oportunidad alternativa: \n\n VIERNES 19 DE SEPTIEMBRE \n\n ¿Procedemos?';
+const START_MESSAGE_LINE_1 = '¿Pensaste que zafabas??? ¿Te inventaste un casorio para irte antes?';
+const START_MESSAGE_LINE_2 = 'LAS SINIESTRAS TE INFORMAN QUE TU EXPERIENCIA ESTÁ POR LLEGAR...';
+const WIN_MESSAGE = '--- ¡DISEÑO DE EXPERIENCIA COMPLETADO! --- \n\nElementos recolectados: 🍣, ✈️, 💜, 👠, 🌭, 🌎... \n\nConclusión: ¡PREPARATIVOS EN MARCHA! 😉 \n\n Lo único que necesitamos es tu confirmación para la noche del: \n\nSÁBADO 20 DE SEPTIEMBRE';
+const ALT_DATE_MESSAGE = 'RECALCULANDO...\n¡ALERTA! EL SISTEMA ENCONTRÓ UNA ÚNICA VENTAJA DE OPORTUNIDAD ALTERNATIVA:\n\nVIERNES 19 DE SEPTIEMBRE';
 
 const WHATSAPP_MSG_SATURDAY = 'Yeeeiiiii. Reservo el sábado 20 de septiembre para lo que sea que estén tramando, siniestras. ¡Avisen!';
 const WHATSAPP_MSG_FRIDAY = 'El sábado 20 no puedo! pero me libero para el Plan B del viernes 19. Agendado!';
 
-// --- ESTILO MODERNO ---
-const FONT_STYLE_MODERN = {
-    fontFamily: '"Poppins", sans-serif',
-    fill: '#E2E8F0', // Un blanco más suave
+const FONT_STYLE_IMPACT = {
+    fontFamily: '"Anton", sans-serif',
+    fill: '#E2E8F0',
     align: 'center'
 };
 
@@ -30,13 +28,28 @@ class StartScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#1a202c');
-        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, START_MESSAGE, { ...FONT_STYLE_MODERN, fontSize: '20px', wordWrap: { width: 800 }, lineSpacing: 10 }).setOrigin(0.5);
-        
-        const playButton = this.add.text(this.scale.width / 2, this.scale.height / 2 + 100, 'JUGAR', { ...FONT_STYLE_MODERN, fontSize: '32px', fill: '#4FD1C5' }).setOrigin(0.5).setInteractive(); // Color menta vibrante
 
-        playButton.on('pointerdown', () => this.scene.start('GameScene'));
-        playButton.on('pointerover', () => playButton.setScale(1.1));
-        playButton.on('pointerout', () => playButton.setScale(1));
+        // --- DISEÑO DE TEXTO MODIFICADO ---
+        // Línea 1, más pequeña y en un color secundario
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 120, START_MESSAGE_LINE_1, { ...FONT_STYLE_IMPACT, fontSize: '32px', fill: '#A0AEC0', wordWrap: { width: 900 } }).setOrigin(0.5);
+        
+        // Línea 2, más grande y en el color principal
+        this.add.text(this.scale.width / 2, this.scale.height / 2, START_MESSAGE_LINE_2, { ...FONT_STYLE_IMPACT, fontSize: '48px', wordWrap: { width: 900 }, lineSpacing: 10 }).setOrigin(0.5);
+        
+        // --- BOTÓN CON RECTÁNGULO ---
+        const buttonWidth = 400;
+        const buttonHeight = 80;
+        const buttonX = this.scale.width / 2;
+        const buttonY = this.scale.height / 2 + 150;
+
+        const buttonRect = this.add.rectangle(buttonX, buttonY, buttonWidth, buttonHeight, 0x4FD1C5).setStrokeStyle(2, 0x2C7A7B);
+        const buttonText = this.add.text(buttonX, buttonY, '¡JUGAR AHORA!', { ...FONT_STYLE_IMPACT, fontSize: '42px', fill: '#1A202C' }).setOrigin(0.5);
+        
+        // Hacemos el rectángulo interactivo para que toda el área sea un botón
+        buttonRect.setInteractive()
+            .on('pointerdown', () => this.scene.start('GameScene'))
+            .on('pointerover', () => buttonRect.fillColor = 0x81E6D9)
+            .on('pointerout', () => buttonRect.fillColor = 0x4FD1C5);
     }
 }
 
@@ -62,11 +75,12 @@ class GameScene extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, gameWidth, gameHeight);
         this.physics.world.setBoundsCollision(true, true, true, false);
         
-        this.add.rectangle(gameWidth + (sidebarWidth / 2), gameHeight / 2, sidebarWidth, gameHeight, 0x111827).setStrokeStyle(1, 0x4A5568); // Barra lateral más oscura y con borde sutil
-        this.add.text(gameWidth + 100, 40, 'PISTAS', { ...FONT_STYLE_MODERN, fontSize: '22px', fill: '#A0AEC0' }).setOrigin(0.5);
-        this.cluesText = this.add.text(gameWidth + 100, 300, '', { ...FONT_STYLE_MODERN, fontSize: '32px', wordWrap: { width: sidebarWidth - 20 }, align: 'center' }).setOrigin(0.5);
+        this.add.rectangle(gameWidth + (sidebarWidth / 2), gameHeight / 2, sidebarWidth, gameHeight, 0x111827).setStrokeStyle(1, 0x4A5568);
+        this.add.text(gameWidth + 100, 60, 'PISTAS', { ...FONT_STYLE_IMPACT, fontSize: '40px', fill: '#A0AEC0' }).setOrigin(0.5);
+        this.cluesText = this.add.text(gameWidth + 100, 300, '', { ...FONT_STYLE_IMPACT, fontSize: '48px', wordWrap: { width: sidebarWidth - 20 }, align: 'center' }).setOrigin(0.5);
 
-        this.paddle = this.add.rectangle(gameWidth / 2, gameHeight - 60, 150, 20, 0xffffff);
+        // --- CAMBIO: Ancho de la barra aumentado de 150 a 200 ---
+        this.paddle = this.add.rectangle(gameWidth / 2, gameHeight - 60, 200, 20, 0xffffff);
         this.physics.add.existing(this.paddle);
         this.paddle.body.setImmovable(true);
         this.paddle.body.allowGravity = false;
@@ -93,8 +107,10 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.ball, this.bricks, this.hitBrick, null, this);
         this.physics.add.overlap(this.paddle, this.fallingEmojis, this.collectEmoji, null, this);
 
+        // --- CAMBIO: Lógica de movimiento ajustada al nuevo ancho de la barra ---
         this.input.on('pointermove', (pointer) => {
-            this.paddle.x = Phaser.Math.Clamp(pointer.x, 75, gameWidth - 75);
+            const halfPaddleWidth = this.paddle.displayWidth / 2;
+            this.paddle.x = Phaser.Math.Clamp(pointer.x, halfPaddleWidth, gameWidth - halfPaddleWidth);
         });
     }
 
@@ -151,14 +167,14 @@ class WinScene extends Phaser.Scene {
     constructor() { super('WinScene'); }
     create() {
         this.cameras.main.setBackgroundColor('#1a202c');
-        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, WIN_MESSAGE, { ...FONT_STYLE_MODERN, fontSize: '18px', wordWrap: { width: 850 }, lineSpacing: 10 }).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 80, WIN_MESSAGE, { ...FONT_STYLE_IMPACT, fontSize: '32px', wordWrap: { width: 900 }, lineSpacing: 15 }).setOrigin(0.5);
         
-        const btnAccept = this.add.text(this.scale.width / 2 - 200, this.scale.height - 100, 'ACEPTO', { ...FONT_STYLE_MODERN, fontSize: '24px', fill: '#4FD1C5' }).setOrigin(0.5).setInteractive();
+        const btnAccept = this.add.text(this.scale.width / 2 - 250, this.scale.height - 120, '¡ACEPTO!', { ...FONT_STYLE_IMPACT, fontSize: '48px', fill: '#4FD1C5' }).setOrigin(0.5).setInteractive();
         btnAccept.on('pointerdown', () => window.open(`https://wa.me/?text=${encodeURIComponent(WHATSAPP_MSG_SATURDAY)}`, '_blank'));
         btnAccept.on('pointerover', () => btnAccept.setScale(1.1));
         btnAccept.on('pointerout', () => btnAccept.setScale(1));
 
-        const btnDecline = this.add.text(this.scale.width / 2 + 200, this.scale.height - 100, 'IMPOSIBLE ESE DÍA', { ...FONT_STYLE_MODERN, fontSize: '24px', fill: '#E53E3E' }).setOrigin(0.5).setInteractive();
+        const btnDecline = this.add.text(this.scale.width / 2 + 250, this.scale.height - 120, 'IMPOSIBLE', { ...FONT_STYLE_IMPACT, fontSize: '48px', fill: '#E53E3E' }).setOrigin(0.5).setInteractive();
         btnDecline.on('pointerdown', () => this.scene.start('AltDateScene'));
         btnDecline.on('pointerover', () => btnDecline.setScale(1.1));
         btnDecline.on('pointerout', () => btnDecline.setScale(1));
@@ -172,9 +188,9 @@ class AltDateScene extends Phaser.Scene {
     constructor() { super('AltDateScene'); }
     create() {
         this.cameras.main.setBackgroundColor('#1a202c');
-        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, ALT_DATE_MESSAGE, { ...FONT_STYLE_MODERN, fontSize: '20px', wordWrap: { width: 800 }, lineSpacing: 10 }).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 50, ALT_DATE_MESSAGE, { ...FONT_STYLE_IMPACT, fontSize: '38px', wordWrap: { width: 900 }, lineSpacing: 15 }).setOrigin(0.5);
         
-        const btnPlanB = this.add.text(this.scale.width / 2, this.scale.height - 150, 'ACEPTO PLAN B', { ...FONT_STYLE_MODERN, fontSize: '28px', fill: '#4FD1C5' }).setOrigin(0.5).setInteractive();
+        const btnPlanB = this.add.text(this.scale.width / 2, this.scale.height - 150, 'ACEPTO PLAN B', { ...FONT_STYLE_IMPACT, fontSize: '48px', fill: '#4FD1C5' }).setOrigin(0.5).setInteractive();
         btnPlanB.on('pointerdown', () => window.open(`https://wa.me/?text=${encodeURIComponent(WHATSAPP_MSG_FRIDAY)}`, '_blank'));
         btnPlanB.on('pointerover', () => btnPlanB.setScale(1.1));
         btnPlanB.on('pointerout', () => btnPlanB.setScale(1));
@@ -191,13 +207,22 @@ class GameOverScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#1a202c');
-        this.add.text(this.scale.width / 2, this.scale.height / 2 - 100, 'GAME OVER', { ...FONT_STYLE_MODERN, fontSize: '64px', fill: '#E53E3E' }).setOrigin(0.5);
-        this.add.text(this.scale.width / 2, this.scale.height / 2, 'Sin completar no hay experiencia', { ...FONT_STYLE_MODERN, fontSize: '20px' }).setOrigin(0.5);
-        const restartButton = this.add.text(this.scale.width / 2, this.scale.height / 2 + 120, 'Jugar de nuevo', { ...FONT_STYLE_MODERN, fontSize: '32px', fill: '#4FD1C5' }).setOrigin(0.5).setInteractive();
+        this.add.text(this.scale.width / 2, this.scale.height / 2 - 120, 'GAME OVER', { ...FONT_STYLE_IMPACT, fontSize: '90px', fill: '#E53E3E' }).setOrigin(0.5);
+        
+        this.add.text(this.scale.width / 2, this.scale.height / 2 + 20, 'Eso te pasa por angurrienta, sin completar no hay experiencia.', { ...FONT_STYLE_IMPACT, fontSize: '24px', wordWrap: { width: 600 } }).setOrigin(0.5);
+        
+        const buttonWidth = 450;
+        const buttonHeight = 80;
+        const buttonX = this.scale.width / 2;
+        const buttonY = this.scale.height / 2 + 130;
 
-        restartButton.on('pointerdown', () => this.scene.start('GameScene'));
-        restartButton.on('pointerover', () => restartButton.setScale(1.1));
-        restartButton.on('pointerout', () => restartButton.setScale(1));
+        const restartRect = this.add.rectangle(buttonX, buttonY, buttonWidth, buttonHeight, 0x4FD1C5).setStrokeStyle(2, 0x2C7A7B);
+        const restartText = this.add.text(buttonX, buttonY, 'Volver a intentarlo', { ...FONT_STYLE_IMPACT, fontSize: '40px', fill: '#1A202C' }).setOrigin(0.5);
+
+        restartRect.setInteractive()
+            .on('pointerdown', () => this.scene.start('GameScene'))
+            .on('pointerover', () => restartRect.fillColor = 0x81E6D9)
+            .on('pointerout', () => restartRect.fillColor = 0x4FD1C5);
     }
 }
 
